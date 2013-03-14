@@ -1,4 +1,33 @@
 
+tm.define("Dialog", {
+    init: function(options) {
+        this._element = $( '#dialog_simple' ).clone();
+        this._element.dialog(options);
+
+        this.input = $(".input", this._element);
+    },
+    close: function() {
+        this._element.dialog("close");
+    },
+    setPosition: function(left, top) {
+        this._element.parent().css({
+            left: left,
+            top: top,
+        });
+    },
+    getPosition: function() {
+        return this._element.parent().position();
+    },
+
+    getLeft: function() {
+        return this._element.parent().position().left;
+    },
+
+    getTop: function() {
+        return this._element.parent().position().top;
+    },
+});
+
 ;(function() {
     var socket  = null;
     var input   = null;
@@ -16,23 +45,20 @@
 
         socket.on('myconnect', function(data) {
             console.log('Cliant-connect: ' + data.userId);
-            var dialog = $( '#dialog_simple' ).clone();
-            dialog.dialog({ title: "*anonymous " + data.userId });
-            myDialog = dialog;
 
-            dialog.parent().css({
-                left: Math.rand(0, innerWidth-200),
-                top: Math.rand(0, innerHeight-200),
+            var dialog = myDialog = Dialog({
+                title: "*anonymous " + data.userId
             });
+            dialog.setPosition(Math.rand(0, innerWidth-200), Math.rand(0, innerHeight-200));
 
-            myDialog.on( "dialogdrag", function( event, ui ) {
+            dialog._element.on("dialogdrag", function( event, ui ) {
                 socket.emit("drag", {
                     left: ui.position.left,
                     top: ui.position.top
                 });
             });
 
-            $("input", myDialog).on("keydown", function() {
+            dialog.input.on("keyup", function() {
                 socket.emit("change message", {
                     message: this.value
                 });
@@ -43,42 +69,38 @@
             console.log('Cliant-disconnect: ' + data.userId);
         });
 
+        // 他ユーザー接続
         socket.on('other connect', function(data) {
             console.log('Other-connect: ' + data.userId);
         });
+        // 他ユーザーの更新
+        socket.on('other update', function(data) {
+            if(userDialogMap[data.userId] === undefined){
+                var dialog = Dialog({
+                    title: "anonymous " + data.userId,
+                    draggable: false
+                });
+
+                dialog.setPosition(data.data.left, data.data.top);
+                userDialogMap[data.userId] = dialog;
+            }
+        });
+        // 他ユーザー削除
         socket.on('other disconnect', function(data) {
             console.log('Other-disconnect: ' + data.userId);
-            userDialogMap[data.userId].dialog("close");
+            userDialogMap[data.userId].close();
             delete userDialogMap[data.userId];
             userDialogMap[data.userId] = null;
         });
         socket.on('other dialogdrag', function(data) {
             var dialog = userDialogMap[data.userId];
-            dialog.parent().css({
-                left: data.data.left,
-                top: data.data.top,
-            });
-        });
-        // 他ユーザーの更新
-        socket.on('other update', function(data) {
-            if(userDialogMap[data.userId] === undefined){
-                var dialog = $( '#dialog_simple' ).clone();
-                dialog.dialog({
-                    title: "anonymous " + data.userId,
-                    draggable: false
-                });
-                dialog.parent().css({
-                    left: data.data.left,
-                    top: data.data.top,
-                });
-                userDialogMap[data.userId] = dialog;
-            }
+            dialog.setPosition(data.data.left, data.data.top);
         });
         socket.on('other send message', function(e) {
             console.log(e.data)
         });
         socket.on('other change message', function(data) {
-            $("input", userDialogMap[data.userId]).val(data.data.message);
+            userDialogMap[data.userId].input.val(data.data.message);
         });
     };
 
@@ -97,8 +119,8 @@
         tm.setLoop(function() {
             if (myDialog) {
                 socket.emit('update', {
-                    left: myDialog.parent().position().left,
-                    top: myDialog.parent().position().top,
+                    left: myDialog.getLeft(),
+                    top: myDialog.getTop(),
                 });
             }
         }, 1000);
