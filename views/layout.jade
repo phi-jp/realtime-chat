@@ -1,0 +1,62 @@
+doctype 5
+html
+  head
+    title= title
+    // meta(name='viewport', content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no')
+    meta(name='apple-mobile-web-app-capable', content='yes')
+    meta(name='apple-mobile-web-app-status-bar-style', content='black-translucent')
+    
+    // jquery ui bootstrap
+    
+    link(rel='stylesheet', href='/plugins/jquery-ui-bootstrap/assets/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/plugins/jquery-ui-bootstrap/css/custom-theme/jquery-ui-1.10.0.custom.css')
+    script(src='/plugins/jquery-ui-bootstrap/assets/js/jquery-1.9.0.min.js')
+    script(src='/plugins/jquery-ui-bootstrap/assets/js/bootstrap.min.js')
+    script(src='/plugins/jquery-ui-bootstrap/assets/js/jquery-ui-1.10.0.custom.min.js')
+    
+    // orign
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script var port = #{port};
+    script(src='/socket.io/socket.io.js')
+    script(src='/javascripts/tmlib.js')
+    script(src='/javascripts/main.js')
+  body
+    div.container
+        block content
+        input#input
+        input#output
+    
+    
+    html
+       |<div class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-dialog-buttons ui-draggable ui-resizable" style="position: absolute; height: auto; width: 485.8125px; top: 5223px; left: 90px; display: block;" tabindex="-1" role="dialog" aria-describedby="dialog_simple" aria-labelledby="ui-id-5">
+       |    <div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
+       |        <span id="ui-id-5" class="ui-dialog-title">Dialog Simple Title</span>
+       |        <button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close" role="button" aria-disabled="false" title="close">
+       |            <span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
+       |            <span class="ui-button-text">close</span>
+       |        </button>
+       |    </div>
+       |    <div id="dialog_simple" style="width: auto; min-height: 0px; max-height: none; height: 199.8125px;" class="ui-dialog-content ui-widget-content">
+       |        <p>Text Text Text Text Text Text Text Text</p>
+       |        <input class="input" type="text" />
+       |    </div>
+       |    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix"><div class="ui-dialog-buttonset"><button type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Ok</span></button><button type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Cancel</span></button></div></div><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-e" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-s" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-se ui-icon ui-icon-gripsmall-diagonal-se" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-sw" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-ne" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90;">
+       |    </div>
+       |</div>
+    
+    html
+       |<div class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-dialog-buttons ui-draggable ui-resizable" style="position: absolute; height: auto; width: 485.8125px; top: 5223px; left: 90px; display: block;" tabindex="-1" role="dialog" aria-describedby="dialog_simple-dummy" aria-labelledby="ui-id-5">
+       |    <div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix"><span id="ui-id-5" class="ui-dialog-title">Dialog Simple Title</span><button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close" role="button" aria-disabled="false" title="close"><span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span><span class="ui-button-text">close</span></button></div><div id="dialog_simple" style="width: auto; min-height: 0px; max-height: none; height: 199.8125px;" class="ui-dialog-content ui-widget-content">
+       |        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+       |    </div>
+       |<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix"><div class="ui-dialog-buttonset"><button type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Ok</span></button><button type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Cancel</span></button></div></div><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-e" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-s" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-se ui-icon ui-icon-gripsmall-diagonal-se" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-sw" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-ne" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90;">
+       |</div>
+       |</div>
+    
+    script
+        $(function() {
+
+        });
+    
+
+
