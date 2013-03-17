@@ -20,6 +20,7 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(app.router);
+  app.use(require('stylus').middleware({ src: __dirname + '/public' }));
   app.use(express.static(path.join(__dirname, 'public')));
 });
 
@@ -41,7 +42,6 @@ var server = http.createServer(app).listen(app.get('port'), function(){
 
 var io = require('socket.io').listen(server);
 var userId = 0;
-//var socket = require('socket.io').listen(app);
 io.sockets.on('connection', function(socket) {
   socket.handshake.userId = userId;
   userId++;

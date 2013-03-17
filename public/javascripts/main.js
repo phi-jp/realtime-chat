@@ -1,31 +1,48 @@
 
 tm.define("Dialog", {
+    superClass: "tm.dom.Element",
+
     init: function(options) {
-        this._element = $( '#dialog_simple' ).clone();
-        this._element.dialog(options);
+        this._initJQueryDialog(options);
+        this.superInit(this._jqeryElement.parent()[0]);
 
-        this.input = $(".input", this._element);
+        this.input = this.query(".input");
+        
+        var color = "hsla({0}, 100%, 95%, 1.0)".format(Math.rand(0, 360));
+        this.style.set("background", color);
     },
-    close: function() {
-        this._element.dialog("close");
-    },
-    setPosition: function(left, top) {
-        this._element.parent().css({
-            left: left,
-            top: top,
+
+    _initJQueryDialog: function(options) {
+        this._jqeryElement = $( '#dialog_simple' ).clone();
+        options.extend({
+            autoOpen: false,
+            width: 400,
+            buttons: {
+                "Ok": function () {
+                    $(this).dialog("close");
+                },
+                "Cancel": function () {
+                    $(this).dialog("close");
+                }
+            },
         });
-    },
-    getPosition: function() {
-        return this._element.parent().position();
-    },
-
-    getLeft: function() {
-        return this._element.parent().position().left;
+        this._jqeryElement.dialog(options);
+        this._jqeryElement.dialog("open");
     },
 
-    getTop: function() {
-        return this._element.parent().position().top;
+    close: function() {
+        this._jqeryElement.dialog("close");
     },
+    setPosition: function(x, y) {
+        this.x = x;
+        this.y = y;
+    },
+    setBackground: function(color) {
+        this.style.set("background", color);
+    },
+    getBackground: function() {
+        return this.style.get("background");
+    }
 });
 
 ;(function() {
@@ -49,16 +66,17 @@ tm.define("Dialog", {
             var dialog = myDialog = Dialog({
                 title: "*anonymous " + data.userId
             });
+            dialog.classList.add("my-dialog");
             dialog.setPosition(Math.rand(0, innerWidth-200), Math.rand(0, innerHeight-200));
 
-            dialog._element.on("dialogdrag", function( event, ui ) {
+            dialog._jqeryElement.on("dialogdrag", function( event, ui ) {
                 socket.emit("drag", {
                     left: ui.position.left,
                     top: ui.position.top
                 });
             });
 
-            dialog.input.on("keyup", function() {
+            dialog.input.event.add("keyup", function() {
                 socket.emit("change message", {
                     message: this.value
                 });
@@ -82,6 +100,7 @@ tm.define("Dialog", {
                 });
 
                 dialog.setPosition(data.data.left, data.data.top);
+                dialog.setBackground(data.data.background);
                 userDialogMap[data.userId] = dialog;
             }
         });
@@ -100,7 +119,7 @@ tm.define("Dialog", {
             console.log(e.data)
         });
         socket.on('other change message', function(data) {
-            userDialogMap[data.userId].input.val(data.data.message);
+            userDialogMap[data.userId].input.value = data.data.message;
         });
     };
 
@@ -119,8 +138,9 @@ tm.define("Dialog", {
         tm.setLoop(function() {
             if (myDialog) {
                 socket.emit('update', {
-                    left: myDialog.getLeft(),
-                    top: myDialog.getTop(),
+                    left: myDialog.x,
+                    top: myDialog.y,
+                    background: myDialog.getBackground()
                 });
             }
         }, 1000);

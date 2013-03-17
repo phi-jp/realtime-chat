@@ -2,11 +2,15 @@ body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
-
-a {
-  color: #00B7FF;
+.ui-widget-header {
+  border: 0;
 }
-
-canvas {
-    box-shadow: 0 0 4px 0 #aaa;
+.ui-dialog {
+  opacity: 0.75;
+}
+.ui-dialog.my-dialog {
+  opacity: 1;
+}
+.ui-dialog .input {
+  width: 95%;
 }
