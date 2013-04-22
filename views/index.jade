@@ -3,5 +3,10 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+  div#talk-list(ng-controller="TalkListCtrl")
+    ul
+      li.talk(ng-repeat="talk in talkList", style="background-color:{{talk.color}}")
+        div {{talk.id}}
+        div {{talk.msg}}
 
   include input-box.jade

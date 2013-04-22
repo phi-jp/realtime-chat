@@ -9,22 +9,15 @@ tm.define("Dialog", {
         this.input = this.query(".input");
         
         var color = "hsla({0}, 100%, 95%, 1.0)".format(Math.rand(0, 360));
+        this.color = color;
         this.style.set("background", color);
     },
 
     _initJQueryDialog: function(options) {
         this._jqeryElement = $( '#dialog_simple' ).clone();
-        options.extend({
+        options.$extend({
             autoOpen: false,
             width: 400,
-            buttons: {
-                "Ok": function () {
-                    $(this).dialog("close");
-                },
-                "Cancel": function () {
-                    $(this).dialog("close");
-                }
-            },
         });
         this._jqeryElement.dialog(options);
         this._jqeryElement.dialog("open");
@@ -42,7 +35,19 @@ tm.define("Dialog", {
     },
     getBackground: function() {
         return this.style.get("background");
-    }
+    },
+
+    getInputText: function() {
+        return this.input.value;
+    },
+    setInputText: function(text) {
+        this.input.value = text;
+        return this;
+    },
+    clearInputText: function() {
+        this.setInputText("");
+        return this;
+    },
 });
 
 ;(function() {
@@ -50,6 +55,7 @@ tm.define("Dialog", {
     var input   = null;
     var output  = null;
     var myDialog = null;
+    var myUserId = null;
     var userDialogMap = {};
 
     var initSocketIO = function() {
@@ -62,9 +68,22 @@ tm.define("Dialog", {
 
         socket.on('myconnect', function(data) {
             console.log('Cliant-connect: ' + data.userId);
+            myUserId = data.userId;
 
             var dialog = myDialog = Dialog({
-                title: "*anonymous " + data.userId
+                title: "*anonymous " + data.userId,
+                buttons: {
+                    "Send (Shift+Enter)": function () {
+                        socket.emit("send message", {
+                            message: myDialog.getInputText(),
+                            color: myDialog.color,
+                        });
+                        myDialog.clearInputText();
+                    },
+                    // "Cancel": function () {
+                    //    $(this).dialog("close");
+                    // },
+                }
             });
             dialog.classList.add("my-dialog");
             dialog.setPosition(Math.rand(0, innerWidth-200), Math.rand(0, innerHeight-200));
@@ -80,6 +99,16 @@ tm.define("Dialog", {
                 socket.emit("change message", {
                     message: this.value
                 });
+            });
+            dialog.input.event.add("keyup", function(e) {
+                if (e.shiftKey && e.which === 13) {
+                    socket.emit("send message", {
+                        message: myDialog.getInputText(),
+                        color: myDialog.color,
+                    });
+                    myDialog.clearInputText();
+                    return false;
+                }
             });
         });
 
@@ -121,20 +150,24 @@ tm.define("Dialog", {
         socket.on('other change message', function(data) {
             userDialogMap[data.userId].input.value = data.data.message;
         });
+
+        // メッセージ受信
+        socket.on('send message', function(data) {
+            var $scope = angular.element('#talk-list').scope();
+            $scope.talkList.push({
+                id: (data.userId === myUserId) ? "Mine" : "Gest " + data.userId,
+                msg: data.data.message,
+                color: data.data.color,
+            });
+            angular.element('#talk-list').scope().updateTalkList();
+
+            window.scrollTo(0, 1000000);
+        });
     };
 
     tm.main(function() {
         initSocketIO();
         
-        input  = tm.dom.Element("#input");
-        output = tm.dom.Element("#output");
-        
-        input.event.add("change", function() {
-            socket.emit("change message", {
-                message: this.value
-            });
-        });
-
         tm.setLoop(function() {
             if (myDialog) {
                 socket.emit('update', {
@@ -147,3 +180,15 @@ tm.define("Dialog", {
     });
 
 })();
+
+
+var TalkListCtrl = function($scope) {
+    $scope.talkList = [];
+    $scope.updateTalkList = function() {
+        $scope.$apply();
+    };
+};
+
+
+
+

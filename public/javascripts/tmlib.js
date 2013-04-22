@@ -7,7 +7,7 @@
  */
 
 
-(function() { "use strict"; })();
+//(function() { "use strict"; })();
 
 /*
  * tm namespace

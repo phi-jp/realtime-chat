@@ -6,10 +6,25 @@ body
   border: 0;
 }
 
+#talk-list
+  ul
+    margin: 0px;
+    list-style-type: none
+    li
+      margin: 10px 0px;
+      padding: 10px
+      border-radius: 5px
+      background-color: hsla(0, 0%, 50%, 0.2)
+    
+
 .ui-dialog
-  opacity: 0.75;
+  opacity: 0.85;
   &.my-dialog
     opacity: 1.0;
+    z-index: 2000;
 
   .input
     width:95%;
+
+  .ui-dialog-buttonpane
+    background-color: hsla(0, 0%, 100%, 0.75);
