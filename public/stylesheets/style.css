@@ -5,12 +5,26 @@ body {
 .ui-widget-header {
   border: 0;
 }
+#talk-list ul {
+  margin: 0px;
+  list-style-type: none;
+}
+#talk-list ul li {
+  margin: 10px 0px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: rgba(128,128,128,0.2);
+}
 .ui-dialog {
-  opacity: 0.75;
+  opacity: 0.85;
 }
 .ui-dialog.my-dialog {
   opacity: 1;
+  z-index: 2000;
 }
 .ui-dialog .input {
   width: 95%;
+}
+.ui-dialog .ui-dialog-buttonpane {
+  background-color: rgba(255,255,255,0.75);
 }
